@@ -41,7 +41,7 @@ poetry2nix.mkPoetryApplication {
     )
   '';
 
-  # preferWheels = true;
+  preferWheels = true;
 
   overrides = [
     poetry2nix.defaultPoetryOverrides
