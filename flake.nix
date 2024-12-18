@@ -131,8 +131,9 @@
           installPhase = ''
             mkdir -p $out/bin
             cat > $out/bin/${name} <<'EOF'
-            #!/bin/sh
-            "$@"
+            #!/usr/bin/env sh
+            export PYTHONPATH=${virtualEnv}/lib/python3.12/site-packages
+            ${pythonSet.openconnect-sso}/bin/openconnect-sso "$@"
             EOF
             chmod +x $out/bin/${name}
             wrapQtApp $out/bin/${name}
