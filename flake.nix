@@ -113,6 +113,11 @@
 
           dontConfigure = true;
           dontBuild = true;
+          dontWrapQtApps = true;
+
+          makeWrapperArgs = [
+            "\${qtWrapperArgs[@]}"
+          ];
 
           buildInputs = [
             pkgs.kdePackages.qtbase
@@ -125,13 +130,23 @@
 
           installPhase = ''
             mkdir -p $out/bin
-            cat <<- BASH > $out/bin/openconnect-sso
-            #!/usr/bin/env bash
-            export PYTHONPATH=${virtualEnv}/lib/python3.12/site-packages
-            ${pythonSet.openconnect-sso}/bin/openconnect-sso "$@"
-            BASH
-            chmod a+x $out/bin/openconnect-sso
+            cat > $out/bin/wrap-qt <<'EOF'
+            #!/bin/sh
+            "$@"
+            EOF
+            chmod +x $out/bin/wrap-qt
+            wrapQtApp $out/bin/wrap-qt
           '';
+
+          #installPhase = ''
+          #  mkdir -p $out/bin
+          #  cat <<- BASH > $out/bin/openconnect-sso
+          #  #!/usr/bin/env bash
+          #  export PYTHONPATH=${virtualEnv}/lib/python3.12/site-packages
+          #  ${pythonSet.openconnect-sso}/bin/openconnect-sso "$@"
+          #  BASH
+          #  chmod a+x $out/bin/openconnect-sso
+          #'';
         };
 
       devShell =
