@@ -107,7 +107,7 @@
         let
           virtualEnv = pythonSet.mkVirtualEnv "openconnect-sso" workspace.deps.default;
         in
-        pkgs.stdenv.mkDerivation {
+        pkgs.stdenv.mkDerivation rec {
           name = "openconnect-sso";
           inherit (pythonSet.openconnect-sso) src;
 
@@ -130,12 +130,12 @@
 
           installPhase = ''
             mkdir -p $out/bin
-            cat > $out/bin/wrap-qt <<'EOF'
+            cat > $out/bin/${name} <<'EOF'
             #!/bin/sh
             "$@"
             EOF
-            chmod +x $out/bin/wrap-qt
-            wrapQtApp $out/bin/wrap-qt
+            chmod +x $out/bin/${name}
+            wrapQtApp $out/bin/${name}
           '';
 
           #installPhase = ''
